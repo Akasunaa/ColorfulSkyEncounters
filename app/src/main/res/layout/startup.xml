@@ -26,6 +26,7 @@
 
     <EditText
         android:id="@+id/pseudo"
+        android:hint="pseudo"
         android:layout_width="263dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
