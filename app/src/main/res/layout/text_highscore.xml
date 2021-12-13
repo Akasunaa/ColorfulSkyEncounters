@@ -4,5 +4,5 @@
     android:layout_height="wrap_content"
     android:id="@+id/textView"
     android:textColor="#ffffff"
-    android:textSize="30dp"
+    android:textSize="20dp"
     />

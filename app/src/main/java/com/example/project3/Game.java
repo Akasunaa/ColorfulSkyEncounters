@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -26,6 +27,7 @@ import java.util.Random;
 import android.content.Intent;
 
 public class Game extends View {
+
     Context context;
     Bitmap background, lifeImage,blueButton,redButton,yellowButton,greenButton;
     Handler handler;
@@ -63,6 +65,7 @@ public class Game extends View {
     public Game(Context context) {
         super(context);
         this.context = context;
+
         Display display = ((Activity) getContext()).getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
@@ -75,7 +78,7 @@ public class Game extends View {
         player = new Player(context);
         //enemySpaceship = new EnemySpaceship(context);
         handler = new Handler();
-        background = BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
+        background = BitmapFactory.decodeResource(context.getResources(), R.drawable.mybackground);
         lifeImage = BitmapFactory.decodeResource(context.getResources(), R.drawable.life);
         lifeImage=lifeImage.createScaledBitmap(lifeImage,80,80,true);
         blueButton = BitmapFactory.decodeResource(context.getResources(), R.drawable.boutonblue);
@@ -88,6 +91,7 @@ public class Game extends View {
         scorePaint.setTextAlign(Paint.Align.LEFT);
         mydb = new MyDatabase(context);
 
+        ((Activity) context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //On instencie la liste des ennemis
         //faire des randoms pour les couleurs
         //les dessiner après
@@ -96,7 +100,7 @@ public class Game extends View {
         String[] randomColor = new String[]{"red","blue","green","yellow"};
 
         for (int i=0;i<10;i++){
-            int random=new Random().nextInt(3);
+            int random=new Random().nextInt(4);
             EnemySpaceship enemySpaceship = new EnemySpaceship(context,randomColor[random]);
             enemySpaceships.add(enemySpaceship);
         }
@@ -116,7 +120,6 @@ public class Game extends View {
 
         //jdessine des trucs tkt
         canvas.drawBitmap(background, 0, 0, null);
-        //canvas.drawText(, 0, TEXT_SIZE, scorePaint);
         canvas.drawText("Pt: " + points,0,150,scorePaint);
         for(int i=life; i>=1; i--){
             canvas.drawBitmap(lifeImage, lifeImage.getWidth() * (i-1), 0, null);
@@ -309,4 +312,6 @@ public class Game extends View {
 
         return true;
     }
+
+
 }

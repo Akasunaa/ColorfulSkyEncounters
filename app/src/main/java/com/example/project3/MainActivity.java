@@ -1,5 +1,7 @@
 package com.example.project3;
 
+import android.app.Activity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +13,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //lance le jeu dans le main
         setContentView(new Game(this));
+
+
     }
 
     @Override

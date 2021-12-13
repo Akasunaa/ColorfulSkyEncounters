@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@drawable/background">
+    android:background="@drawable/mybackground">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -14,21 +14,22 @@
             android:background="@drawable/goodstart"
             android:onClick="startGame" />
     </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:onClick="startGame"
         android:text="Play"
         android:textColor="#ffffff"
-        android:textSize="30sp"
-        android:onClick="startGame" />
+        android:textSize="30sp" />
+
     <EditText
         android:id="@+id/pseudo"
+        android:layout_width="263dp"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
         android:layout_marginTop="10dp"
-        android:inputType="text"
         android:background="#ffffff"
-        />
+        android:inputType="text" />
 
 </LinearLayout>
