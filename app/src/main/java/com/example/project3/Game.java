@@ -15,6 +15,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
@@ -24,7 +26,6 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
-import android.content.Intent;
 
 public class Game extends View {
 
@@ -60,6 +61,7 @@ public class Game extends View {
 
 
     int boucle=0;
+    BackgroundSound mBackgroundSound;
 
 
     public Game(Context context) {
@@ -90,7 +92,7 @@ public class Game extends View {
         scorePaint.setTextSize(TEXT_SIZE);
         scorePaint.setTextAlign(Paint.Align.LEFT);
         mydb = new MyDatabase(context);
-
+        mBackgroundSound = new BackgroundSound();
         ((Activity) context).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //On instencie la liste des ennemis
         //faire des randoms pour les couleurs
@@ -104,13 +106,11 @@ public class Game extends View {
             EnemySpaceship enemySpaceship = new EnemySpaceship(context,randomColor[random]);
             enemySpaceships.add(enemySpaceship);
         }
-
-
-
-
+        mBackgroundSound.execute((Void) null);
 
 
     }
+
 
     //Probleme : je redessine les boutons chaque frame. C'est pas ouf.
     @Override
@@ -118,6 +118,10 @@ public class Game extends View {
         //GROS CA NA AUCUN SENS JE SORS CETTE LIGNE DE MON TROUDUC SERIEUX mais camarsh
         this.getRootView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_HIDE_NAVIGATION| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
 
+
+        if(paused){
+            mBackgroundSound.cancel(true);
+        }
         //jdessine des trucs tkt
         canvas.drawBitmap(background, 0, 0, null);
         canvas.drawText("Pt: " + points,0,150,scorePaint);
@@ -135,14 +139,14 @@ public class Game extends View {
 
         // Vie nulle, changement sur l'activité game over
         if(life <= 0){
-
+            mBackgroundSound.cancel(true);
             String id = ((Activity) context).getIntent().getExtras().getString("id");
             mydb.update(id,points);
             mydb.readData();
             paused = true;
             handler = null;
             Intent intent = new Intent(context, GameOver.class);
-
+            mBackgroundSound.cancel(true);
             //intent.putExtra("points", points);
             context.startActivity(intent);
             ((Activity) context).finish();
@@ -311,6 +315,19 @@ public class Game extends View {
 
 
         return true;
+    }
+
+    public class BackgroundSound extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            MediaPlayer player = MediaPlayer.create(((Activity) context), R.raw.spacetheme);
+            player.setLooping(true); // Set looping
+            player.setVolume(1.0f, 1.0f);
+            player.start();
+            return null;
+        }
+
     }
 
 
