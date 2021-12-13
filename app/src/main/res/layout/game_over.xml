@@ -31,19 +31,19 @@
         android:gravity="center"
         android:orientation="vertical"
         android:layout_marginBottom="64dp">
+
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Points: "
-            android:textColor="#ffffff"
-            android:textSize="18sp" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:id="@+id/tvPoints"
-            android:text="Points: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="High Score"
             android:textColor="#ffffff"
-            android:textSize="40sp" />
+            android:textSize="30sp" />
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
 
 </LinearLayout>

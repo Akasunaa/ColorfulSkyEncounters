@@ -3,6 +3,7 @@ package com.example.project3;
 
 import static java.lang.Thread.sleep;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,9 +19,11 @@ import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Random;
+import android.content.Intent;
 
 public class Game extends View {
     Context context;
@@ -35,23 +38,25 @@ public class Game extends View {
     boolean paused = false;
     Player player;
     Random random;
+    MyDatabase mydb;
     ArrayList<Shot> playerShots;
     ArrayList<EnemySpaceship> enemySpaceships;
     ArrayList<EnemySpaceship> enemySpaceshipsOnPlay;
-    boolean enemyShotAction = false;
     final Runnable runnable = new Runnable() {
         @Override
         public void run() {
             invalidate();
         }
     };
-    boolean canShoot = true;
+
     float cooldownShot = 0;
     float cooldownMonster=0;
     float cooldownLife=0;
-
+    boolean canShoot = true;
     boolean canSpawn=true;
     boolean canLooseLife=true;
+
+
     int boucle=0;
 
 
@@ -81,6 +86,7 @@ public class Game extends View {
         scorePaint.setColor(Color.RED);
         scorePaint.setTextSize(TEXT_SIZE);
         scorePaint.setTextAlign(Paint.Align.LEFT);
+        mydb = new MyDatabase(context);
 
         //On instencie la liste des ennemis
         //faire des randoms pour les couleurs
@@ -126,10 +132,15 @@ public class Game extends View {
 
         // Vie nulle, changement sur l'activité game over
         if(life <= 0){
+
+            String id = ((Activity) context).getIntent().getExtras().getString("id");
+            mydb.update(id,points);
+            mydb.readData();
             paused = true;
             handler = null;
             Intent intent = new Intent(context, GameOver.class);
-            intent.putExtra("points", points);
+
+            //intent.putExtra("points", points);
             context.startActivity(intent);
             ((Activity) context).finish();
         }
@@ -168,10 +179,13 @@ public class Game extends View {
                     && enemySpaceship.ex <= player.ox + player.getOurSpaceshipWidth()
                     && enemySpaceship.ey >= player.oy
                     && enemySpaceship.ey <= screenHeight
-                    && canLooseLife ==true)) {
+                    && canLooseLife)) {
                 life--;
-                cooldownLife=100f;
+
+                @SuppressLint("WrongConstant") Toast toast = Toast.makeText(context, "Oh no!", 10);
+                toast.show();
                 enemySpaceships.remove(i);
+                cooldownLife=500f;
                 canLooseLife=false;
 
 
@@ -224,6 +238,7 @@ public class Game extends View {
             handler.postDelayed(runnable, UPDATE_MILLIS);
             cooldownShot -=UPDATE_MILLIS;
             cooldownMonster-=UPDATE_MILLIS;
+            cooldownLife-=UPDATE_MILLIS;
             //cooldown du tir
             if (cooldownShot <=0){
                 canShoot=true;
